@@ -11,6 +11,7 @@ const BackendPosts = () => import("../pages/backend/Posts");
 const BackendProjects = () => import("../pages/backend/Projects");
 const BackendResource = () => import("../pages/backend/Resource");
 const BackendUsers = () => import("../pages/backend/Users");
+const BackendDesign = () => import("../pages/backend/Design");
 
 vue.use(Router);
 

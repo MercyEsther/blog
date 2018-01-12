@@ -17,13 +17,11 @@
 
     <div class="page page2" ref="page">
       <h1 class="page2Title">个人日志</h1>
-      <div class="content">
-        <ul>
-          <li :key="index" v-for="(post,index) in posts">
+      <ul class="content">
+        <li :key="index" v-for="(post,index) in posts">
 
-          </li>
-        </ul>
-      </div>
+        </li>
+      </ul>
     </div>
 
     <div class="page page3" ref="page">
@@ -43,7 +41,8 @@ export default {
     components: {Navbar, Next},
     data(){
         return{
-            navbarShow: false
+            navbarShow: false,
+            posts: {}
         }
     },
     created(){

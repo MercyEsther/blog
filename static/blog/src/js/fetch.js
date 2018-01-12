@@ -1,6 +1,8 @@
 export default async(url="", method="GET", data={}) => {
     
-    let header = {};
+    let header = new Headers({
+        "Content-Type": "application/json"
+    })
 
     if (method == "GET" && data.length != 0){
         url = url + "?";
@@ -13,17 +15,14 @@ export default async(url="", method="GET", data={}) => {
 
     else if (method == "POST"){
         data = JSON.stringify(data);
-        header = new Headers({
-            "Content-Type": "application/json"
-        })
     }
 
     if (window.fetch){
         const result = await fetch(url, {
             method: method,
             headers: header,
-            body: data,
-            credentials: "include"
+            body: data
+            // credentials: "include"
             })
         const response = result.ok ? 
             result.json() :
