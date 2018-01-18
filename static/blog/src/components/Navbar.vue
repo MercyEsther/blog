@@ -12,6 +12,7 @@
                 <li class="item" :key="index" v-for="(item,index) in items" :class="{active: item.path == curPage}" @click="toPage(item.path)">
                     {{item.name}}
                 </li>
+                <li class="backend" @click="$router.push({name: 'backendLogin'})">后台入口</li>
             </ul>
         </div>
     </transition>
@@ -72,7 +73,9 @@ export default {
 .items{
     position: relative;
     height: 100%;
-    width: 100%;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -122,6 +125,20 @@ export default {
 .line3.active{
     transform: rotate(-45deg);
     border-color: white;
+}
+.backend{
+    position: fixed;
+    bottom: 2rem;
+    left: 4rem;
+    list-style: none;
+    text-align: center;
+    color: #ccc;
+    font-size: 0.7rem;
+    font-weight: lighter;
+    text-decoration: underline;
+}
+.backend:hover{
+    cursor: pointer;
 }
 </style>
 

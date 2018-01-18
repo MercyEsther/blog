@@ -23,7 +23,6 @@ export default {
                     break;
                 }
             }
-            console.log("cur page:", this.curPos);
         });
     },
     methods:{

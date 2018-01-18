@@ -3,6 +3,7 @@ export default async(url="", method="GET", data={}) => {
     let header = new Headers({
         "Content-Type": "application/json"
     })
+    let options = {};
 
     if (method == "GET" && data.length != 0){
         url = url + "?";
@@ -11,19 +12,23 @@ export default async(url="", method="GET", data={}) => {
             url += keys[i] + "=" + data[keys[i]] + "&";
         }
         url = url.substring(0, url.length - 1);
+        options = {
+            method: method,
+            headers: header
+        }
     }
 
     else if (method == "POST"){
         data = JSON.stringify(data);
-    }
-
-    if (window.fetch){
-        const result = await fetch(url, {
+        options = {
             method: method,
             headers: header,
             body: data
-            // credentials: "include"
-            })
+        }
+    }
+
+    if (window.fetch){
+        const result = await fetch(url, options)
         const response = result.ok ? 
             result.json() :
             result.status;

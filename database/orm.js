@@ -8,33 +8,59 @@ class Orm extends Base{
 
     findAll(table){
         let _table = this.getTable(table);
-        _table.findAll().then(r => {
-            return JSON.stringify(r);
+        let result = _table.findAll().then(r => {
+            return r;
         })
         .catch(e => {
             throw new Error("[findAll error]".red, e)
         })
+        return result;
     }
 
     findByName(table, name){
         let _table = this.getTable(table);
-        let r = _table.findOne({where: {name: name}}).then(r => {
-            return JSON.stringify(r);
+        let result = _table.findOne({where: {name: name}}).then(r => {
+            return r;
         })
         .catch(e => {
             throw new Error("[findByName error]".red);
         })
-        return r;
+        return result;
     }
 
     findById(table, id){
         let _table = this.getTable(table);
-        _table.findById(id).then(r => {
-            return JSON.stringify(r);
+        let result = _table.findById(id).then(r => {
+            return r;
         })
         .catch(e => {
             throw new Error("[findById error]".red);
         })
+        return result;
+    }
+
+    async update(table,data,option){
+        let _table = this.getTable(table);
+        let r = await _table.findById(data.id)
+        if(r){
+            if(option == "delete"){
+                await r.destroy();
+            }
+            else if(option == "update"){
+                r.title = data.title;
+                r.author = data.author;
+                r.content = data.content;
+                r.desc = data.desc;
+                r.updateAt = Date.now();
+                r.img = data.img;
+                await r.save();
+            }
+            return true;
+        }
+        else{
+            return false;
+        }
+        return result;
     }
 
     getTable(table){
@@ -51,12 +77,10 @@ class Orm extends Base{
         }
     }
 
-    insertUser(data){
+    async insertUser(data){
         let name = data.name;
-        let oldName = this.findByName("users",name).then(r => {
-            return r;
-        })
-        if(!oldName){
+        let oldName = await this.findByName("users",name);
+        if(oldName == null){
             let _table = this.getTable("users");
             let r = _table.create({
                 id: Date.now(),
@@ -65,7 +89,8 @@ class Orm extends Base{
                 email: data.email,
                 phone: data.phone,
                 createAt: Date.now(),
-                role: data.role || 0
+                role: data.role || 0,
+                img: data.img
             })
             .then(r => {
                 return JSON.stringify(r);
@@ -91,7 +116,7 @@ class Orm extends Base{
             createAt: Date.now(),
             updateAt: Date.now()
         }).then(r => {
-            return JSON.stringify(r);
+            return r;
         }).catch(e => {
             throw new Error("[insertPost error]".red);
         })
@@ -99,22 +124,4 @@ class Orm extends Base{
     }
 }
 
-// var o = new Orm();
-// var user = {
-//     name: "huangyh",
-//     password: "admin",
-//     email: "",
-//     phone: "",
-//     role: 1
-// }
-// var post = {
-//     title: "test",
-//     author: "huangyh",
-//     content: "content",
-//     desc: "desc"
-// }
-// o.insertPost(post).then(r => {
-//     console.log("[insertPost]".green, r);
-// }).catch(e => {
-//     console.log("[insertPost]".red, e);
-// })
+module.exports = Orm;

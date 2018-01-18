@@ -1,5 +1,6 @@
 <template>
 <div id="home">
+    <!-- page1 -->
     <div class="page page1" ref="page">
       <h1 class="titleF title">HUANG<span class="titleB">YH</span></h1>
       <div class="viewport">
@@ -15,11 +16,17 @@
       <p class="subTitle">专注前端开发，因为热爱，所以能够做得更好</p>
     </div>
 
+    <!-- page2 -->
     <div class="page page2" ref="page">
       <h1 class="page2Title">个人日志</h1>
       <ul class="content">
-        <li :key="index" v-for="(post,index) in posts">
-
+        <li class="post" :key="index" v-for="(post,index) in posts">
+          <img :src="post.img" class="postImg">
+          <span class="postTitle">{{post.title}}</span>
+          <div class="row">
+            <span class="postDate">{{new Date(post.updateAt).toLocaleString()}}</span>
+            <span class="postAuthor">{{post.author}}</span>
+          </div>
         </li>
       </ul>
     </div>
@@ -33,12 +40,11 @@
 </template>
 
 <script>
-import Navbar from "../../components/Navbar";
 import Next from "../../components/Next";
 import api from "../../js/api.js";
 export default {
     name: "home",
-    components: {Navbar, Next},
+    components: {Next},
     data(){
         return{
             navbarShow: false,
@@ -56,10 +62,10 @@ export default {
     },
     methods:{
       async start(){
-        var posts = await api.getHomePosts();
-        console.log("posts:",posts);
-        if(posts){
-
+        let posts = await api.getPosts();
+        console.log("%c [getPosts]","color: green",posts);
+        if(posts.success){
+          this.posts = posts.posts;
         }
         else{
 
@@ -202,6 +208,58 @@ body,
   font-weight: lighter;
   text-align: center;
   color: #4A4A4A;
+}
+.content{
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.post{
+  position: relative;
+  flex: 0 1 20%;
+  height: 16rem;
+  display: flex;
+  margin: 1rem 2rem;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  transition: all .3s linear;
+}
+.post:hover{
+  box-shadow: 2px 5px 5px 1px #F698A1;
+  cursor: pointer;
+}
+.postImg{
+  position: relative;
+  width: 90%;
+}
+.postTitle{
+  position: relative;
+  width: 100%;
+  padding-left: 1rem;
+  text-align: left;
+  font-size: 1.2rem;
+  font-weight: lighter;
+  color: #4a4a4a;
+}
+.post .row{
+  position: relative;
+  width: 100%;
+  height: 2rem;
+  background-color: #676767;
+  line-height: 2rem;
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 1rem;
+}
+.post .row span{
+  color: white;
+  font-weight: lighter;
+  font-size: 0.85rem;
 }
 </style>
 

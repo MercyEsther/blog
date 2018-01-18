@@ -2,6 +2,7 @@
 <div id="login">
     <div class="title">Backend Login</div>
     <form action="#">
+        <div class="tips row">{{tips}}</div>
         <div class="row row1">
             <label class="name" for="name">用户名</label>
             <input type="text" id="name" class="value" v-model="user.name">
@@ -24,18 +25,27 @@ export default {
     name: "backendLogin",
     data(){
         return{
-            user: {}
+            user: {},
+            tips: ""
         }
     },
     methods:{
         async submit(){
             const result = await api.backendLogin(this.user);
+            console.log("%c [backendLogin]", "color: green", result);
+            if(result.success){
+                this.tips = "登陆成功";
+                this.$router.push({name: "backend"});
+            }
+            else{
+                this.tips = result.message;
+            }
         }
     }
 }
 </script>
 
-<style>
+<style scoped>
 #login{
     position: relative;
     width: 100%;
@@ -98,6 +108,10 @@ form{
     color: #4A4A4A;
     border: 1px solid #9B9B9B;
     background-color: #DAD7D7;
+}
+.tips{
+    justify-content: center !important;
+    color: #FF4E17;
 }
 </style>
 

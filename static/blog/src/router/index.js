@@ -5,23 +5,24 @@ import Home from "../pages/home/Home";
 
 const Projects  = () => import("../pages/projects/Projects");
 
-const BackendLogin = () => import("../pages/backend/Login");
+const BackendLogin = () => import("../pages/login/Login");
+
 const Backend = () => import("../pages/backend/Common");
-const BackendPosts = () => import("../pages/backend/Posts");
-const BackendProjects = () => import("../pages/backend/Projects");
-const BackendResource = () => import("../pages/backend/Resource");
-const BackendUsers = () => import("../pages/backend/Users");
-const BackendDesign = () => import("../pages/backend/Design");
+const BackendPosts = () => import("../pages/backend/children/Posts");
+const BackendProjects = () => import("../pages/backend/children/Projects");
+const BackendResource = () => import("../pages/backend/children/Resource");
+const BackendUsers = () => import("../pages/backend/children/Users");
+const BackendDesign = () => import("../pages/backend/children/Design");
 
 vue.use(Router);
 
 const routes = [
     {
-        path: "/dist/",
+        path: "/",
         name: "app",
         component: App,
         children: [{
-            path: "/",
+            path: "",
             redirect: "home"
         },{
             path: "home",
@@ -32,7 +33,7 @@ const routes = [
             name: "projects",
             component: Projects
         },{
-            path: "backend/login",
+            path: "login",
             name: "backendLogin",
             component: BackendLogin
         },{
@@ -40,6 +41,10 @@ const routes = [
             name: "backend",
             component: Backend,
             children: [
+                {
+                    path: "",
+                    redirect: {name: "backendPosts"}
+                },
                 {
                     path: "posts",
                     name: "backendPosts",
@@ -68,5 +73,6 @@ const routes = [
 
 export default new Router({
     mode: "history",
+    bash: __dirname,
     routes
 })

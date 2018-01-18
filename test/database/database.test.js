@@ -1,15 +1,14 @@
-var Database = require("../../database/database.js");
+var Orm = require("../../database/orm.js");
 var expect = require("chai").expect;
 var colors = require("colors");
 
 describe('数据库测试',function(done){
-    var database = new Database();
+    var database = new Orm();
     var data = {};
     
-    it("[数据库写入post]", function(done){
-        database.init();
+    it("[数据库写入user]", function(done){
         var data = {
-            name: "huangyh",
+            name: "hyh",
             password: "admin",
             role: 1
         }
@@ -21,32 +20,6 @@ describe('数据库测试',function(done){
             .catch(e => {
                 console.log("[database insert error]".red, e.message);
             })
-        done();
-    })
-
-    it("数据库查找", function(done){
-        database.findAll("users")
-            .then(res => {
-                data = res[0];
-                expect(res[0].id).to.be.an("string")
-                done();
-            })
-            .catch(e => {
-                console.log("[database search error]".red,e.message);
-            })
-
-    })
-
-    it("[数据库更新post]",function(done){
-        database.update("users",data)
-            .catch(e => {
-                console.log("[database update error]".red,e.message);
-            })
-        done();
-    })
-
-    it("[数据库删除post]",function(done){
-        database.delete("post", data);
         done();
     })
 })

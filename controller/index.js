@@ -1,8 +1,13 @@
-var posts = async (ctx, next) => {
-    await next();
-    ctx.response.body = {id: 1, name: "test", status: "ok"};
-}
+const backend = require("./backend.js");
 
 module.exports = {
-    "GET /posts": posts
+    "POST /backend/login": backend.signin,
+    
+    "GET /api/v1/posts": backend.getPosts,
+
+    "GET /api/v1/post/delete": backend.deletePost,
+
+    "GET /api/v1/post/add": backend.addPost,
+
+    "POST /api/v1/post/update": backend.updatePost
 }

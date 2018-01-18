@@ -3,18 +3,29 @@ const config = require("./config.js");
 
 class Base{
     constructor(){
-        this.seq = new Seq(config.database, config.user, config.password, {
-            host: config.host,
-            dialect: "mysql",
-            pool: {
-                max: 10,
-                min: 0
-            },
-            operatorsAliases: false
-        }),
-        this._tables = [];
-        this.definePosts();
-        this.defineUsers();
+        this.isInit = false;
+        this.init();
+    }
+
+    init(){
+        if(!this.isInit){
+            this.seq = new Seq(config.database, config.user, config.password, {
+                host: config.host,
+                dialect: "mysql",
+                pool: {
+                    max: 10,
+                    min: 0
+                },
+                operatorsAliases: false
+            }),
+            this._tables = [];
+            this.definePosts();
+            this.defineUsers();
+            this.isInit = true;
+        }
+        else{
+            console.log("[database]".green, "has been inited");
+        }
     }
 
     definePosts(){
@@ -28,7 +39,8 @@ class Base{
             createAt: Seq.BIGINT,
             updateAt: Seq.BIGINT,
             content: Seq.TEXT,
-            desc: Seq.STRING
+            desc: Seq.STRING,
+            img: Seq.STRING
         },{
             timestamps: false
         })

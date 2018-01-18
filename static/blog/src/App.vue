@@ -1,13 +1,14 @@
 <template>
 <div>
     <Navbar/>
+    
     <transition name="slide" mode="out-in">
         <keep-alive>
             <router-view v-if="$route.meta.keepAlive"></router-view>
         </keep-alive>
     </transition>
 
-    <transition name="slide" mode="in-out">
+    <transition name="slide" mode="out-in">
         <router-view v-if="!$route.meta.keepAlive"></router-view>
     </transition>
 </div>
@@ -15,6 +16,7 @@
 
 <script>
 import Navbar from "./components/Navbar";
+
 export default {
     name: "app",
     components: {Navbar},
@@ -35,6 +37,9 @@ export default {
 .slide-enter,
 .slide-leave-to{
     opacity: 0;
+}
+#app{
+
 }
 </style>
 
