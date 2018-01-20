@@ -2,6 +2,7 @@ import vue from "vue";
 import Router from "vue-router";
 import App from "../App";
 import Home from "../pages/home/Home";
+import localStore from "../js/localStore.js";
 
 const Projects  = () => import("../pages/projects/Projects");
 
@@ -71,8 +72,37 @@ const routes = [
     }
 ]
 
-export default new Router({
+const vueRouter = new Router({
     mode: "history",
     bash: __dirname,
-    routes
+    routes,
 })
+
+vueRouter.beforeResolve((to, from, next) => {
+    const nextRoute = [
+        "backendProject",
+        "backendDesign",
+        "backendResource",
+        "backendPosts",
+        "backendUsers",
+    ];
+    const isLogin = localStore.getStore("isLogin");
+    if(nextRoute.indexOf(to.name) >= 0){
+        // 登陆了
+        if(isLogin.isLogin){
+            console.log("登陆了");
+            next();
+        }
+        else{
+        // 未登陆
+            console.log("为登陆");
+            next("/login");
+        }
+    }
+    else{
+        next();
+    }
+    console.log("beforeEach", to.name);
+})
+
+export default vueRouter;

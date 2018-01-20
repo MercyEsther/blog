@@ -9,5 +9,7 @@ module.exports = {
 
     "GET /api/v1/post/add": backend.addPost,
 
-    "POST /api/v1/post/update": backend.updatePost
+    "POST /api/v1/post/update": backend.updatePost,
+
+    "GET /api/v1/backend/signout": backend.signout
 }

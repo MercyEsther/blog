@@ -1,29 +1,40 @@
 const colors = require("colors");
+const bcrypt = require("bcrypt");
 
 var signin = async(ctx, next) => {
     await next();
-    const req = ctx.request.body;
-    console.log("[signin req]".green, req);
+    const user = ctx.request.body;
+    console.log("[signin req]".green, user);
     var data = {};
 
     // 判断用户名密码
-    let User = await Database.getTable("users");
-    await User.findAll({
+    let _User = await Database.getTable("users");
+    await _User.findAll({
         where: {
-            name: req.name,
-            password: req.password
+            name: user.name
         }
     }).then(r => {
         console.log("[find user]".green, JSON.stringify(r));
         if(r.length > 0){
-            data = {
-                success: 1
-            };
+            // 检测密码
+            let hash = JSON.stringify(r);
+            hash = JSON.parse(hash)[0].password;
+            let checkResult = bcrypt.compare(user.password, hash);
+            if(checkResult){
+                data = {success: 1};
+                ctx.session.user = user;
+            }
+            else{
+                data = {
+                    error: 0,
+                    message: "密码错误"
+                }
+            }
         }
         else{
             data = {
                 error: 1,
-                message: "用户名或密码错误"
+                message: "不存在该用户"
             }
         }
     })
@@ -35,6 +46,21 @@ var signin = async(ctx, next) => {
         }
     })
     ctx.body = JSON.stringify(data);
+}
+
+var signout = async(ctx, next) => {
+    await next();
+    let data = {};
+    ctx.session.user = null;
+    console.log(ctx.session.user);
+    if(!ctx.session.user){
+        data = {success: 1};
+    }
+    else{
+        data = {error: 0, message: "退出失败"};
+    }
+    console.log("[data]".green,ctx.session.user);
+    ctx.body = data;
 }
 
 var getPosts = async(ctx, next) => {
@@ -99,6 +125,7 @@ var updatePost = async(ctx,next) => {
     await next();
     let data = {};
     let post = ctx.request.body;
+    console.log("[updatePost success]".green);
 
     let r = await Database.update("posts",post,"update");
     if(r){
@@ -114,8 +141,14 @@ var updatePost = async(ctx,next) => {
     ctx.body = data;
 }
 
+function checkPassword(password, hash){
+    console.log("checkPassword".green, password + "--" + hash);
+    return bcrypt.compare(password, hash);
+}
+
 module.exports = {
     signin,
+    signout,
     getPosts,
     deletePost,
     addPost,

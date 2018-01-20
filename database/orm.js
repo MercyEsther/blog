@@ -1,5 +1,6 @@
 const Base = require("./base.js");
 const colors = require("colors");
+const bcrypt = require("bcrypt");
 
 class Orm extends Base{
     constructor(){
@@ -81,24 +82,26 @@ class Orm extends Base{
         let name = data.name;
         let oldName = await this.findByName("users",name);
         if(oldName == null){
-            let _table = this.getTable("users");
-            let r = _table.create({
-                id: Date.now(),
-                name: data.name,
-                password: data.password,
-                email: data.email,
-                phone: data.phone,
-                createAt: Date.now(),
-                role: data.role || 0,
-                img: data.img
+            bcrypt.hash(data.password, 5, (err,password) => {
+                let _table = this.getTable("users");
+                let r = _table.create({
+                    id: Date.now(),
+                    name: data.name,
+                    password: password,
+                    email: data.email,
+                    phone: data.phone,
+                    createAt: Date.now(),
+                    role: data.role || 0,
+                    img: data.img
+                })
+                .then(r => {
+                    return JSON.stringify(r);
+                })
+                .catch(e => {
+                    throw new Error("[insertUser error]".red);
+                })
+                return r;
             })
-            .then(r => {
-                return JSON.stringify(r);
-            })
-            .catch(e => {
-                throw new Error("[insertUser error]".red);
-            })
-            return r;
         }
         else{
             throw new Error("[insertUser error: name exist]".red);

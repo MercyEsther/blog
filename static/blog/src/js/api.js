@@ -7,4 +7,5 @@ export default {
     deletePost: (data) => fetch("//localhost:3000/api/v1/post/delete", "GET", data),
     addPost: (data) => fetch("//localhost:3000/api/v1/post/add", "GET", data),
     updatePost: (data) => fetch("//localhost:3000/api/v1/post/update", "POST", data),
+    backendSignout: (data) => fetch("//localhost:3000/api/v1/backend/signout", "GET", data)
 }

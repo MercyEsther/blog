@@ -30,7 +30,7 @@
                 <input type="text" v-model="post.content">
             </span>
             <span class="img">
-                <input type="text" v-model="post.img">
+                <input type="file" @change="submitImg($event,post)">
             </span>
             <span class="createAt">{{new Date(post.createAt).toLocaleString()}}</span>
             <span class="updateAt">{{new Date(post.updateAt).toLocaleString()}}</span>
@@ -88,6 +88,15 @@ export default {
             console.log("%c [updatePost]", "color: green", result);
             if(result.success){
                 this.getPosts();
+            }
+        },
+        submitImg(e,post){
+            let file = e.currentTarget.files[0];
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(){
+                post.img = reader.result;
+                console.log("%c [imgSubmit]","color: green");
             }
         }
     }

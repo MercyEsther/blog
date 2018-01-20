@@ -12,7 +12,8 @@
                 <li class="item" :key="index" v-for="(item,index) in items" :class="{active: item.path == curPage}" @click="toPage(item.path)">
                     {{item.name}}
                 </li>
-                <li class="backend" @click="$router.push({name: 'backendLogin'})">后台入口</li>
+                <li class="backend" @click="$router.push({name: 'backendLogin'})" v-if="!isLogin">后台入口</li>
+                <li class="signout" @click="backendSignout" v-if="isLogin">退出后台</li>
             </ul>
         </div>
     </transition>
@@ -20,6 +21,9 @@
 </template>
 
 <script>
+import api from "../js/api.js";
+import {mapState,mapMutations} from "vuex";
+
 export default {
     name: "navbar",
     data(){
@@ -35,6 +39,11 @@ export default {
             navbarShow: false
         }
     },
+    computed:{
+        ...mapState([
+            "isLogin"
+        ])
+    },
     watch:{
         $route(to,from){
             this.curPage = to.name;
@@ -42,10 +51,25 @@ export default {
     },
     created(){
         this.curPage = this.$route.name;
+        
     },
     methods:{
+        ...mapMutations([
+            "SET_LOGIN"
+        ]),
         toPage(path){
             this.$router.push({name: path});
+        },
+        async backendSignout(){
+            let result = await api.backendSignout();
+            console.log("%c [backendSignout]","color: green",result);
+            if(result.success){
+                this.SET_LOGIN(false);
+                this.$router.push("/login");
+            }
+            else{
+
+            }
         }
     }
 }
@@ -126,7 +150,8 @@ export default {
     transform: rotate(-45deg);
     border-color: white;
 }
-.backend{
+.backend,
+.signout{
     position: fixed;
     bottom: 2rem;
     left: 4rem;
@@ -137,7 +162,8 @@ export default {
     font-weight: lighter;
     text-decoration: underline;
 }
-.backend:hover{
+.backend:hover,
+.signout:hover{
     cursor: pointer;
 }
 </style>

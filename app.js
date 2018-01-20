@@ -9,9 +9,17 @@ const Database = require("./database/Orm.js");
 const cors = require("koa2-cors");
 const bodyparser = require("koa-bodyparser");
 const history = require("koa-connect-history-api-fallback");
+const session = require("koa-session");
+app.keys = ["huangyh"];
+
+const sessionConfig = {
+    key: "huangyh" ,
+    maxAge: 60*60*1000
+}
 
 global.Database = new Database();
 
+app.use(session(sessionConfig,app));
 app.use(bodyparser());
 app.use(cors({
     origin: function (ctx) {

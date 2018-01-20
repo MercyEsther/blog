@@ -20,7 +20,7 @@
     <div class="page page2" ref="page">
       <h1 class="page2Title">个人日志</h1>
       <ul class="content">
-        <li class="post" :key="index" v-for="(post,index) in posts">
+        <li class="post" :key="index" v-for="(post,index) in posts" v-if="index < 6">
           <img :src="post.img" class="postImg">
           <span class="postTitle">{{post.title}}</span>
           <div class="row">
@@ -55,6 +55,7 @@ export default {
       this.start();
     },
     mounted(){
+      
       var pages = document.getElementsByClassName("page");
       for(var page of pages){
         page.style.height = window.screen.availHeight + "px";
@@ -211,18 +212,22 @@ body,
 }
 .content{
   position: relative;
-  width: 100%;
+  width: 80%;
+  margin: 0px auto;
+  height: 80%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: space-around;
+  overflow: hidden;
 }
 .post{
   position: relative;
-  flex: 0 1 20%;
-  height: 16rem;
+  flex: 0 1 26%;
+  min-width: 18rem;
+  height: 18rem;
   display: flex;
-  margin: 1rem 2rem;
+  margin-bottom: 2rem;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;

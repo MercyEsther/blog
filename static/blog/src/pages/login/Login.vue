@@ -20,6 +20,7 @@
 
 <script>
 import api from "../../js/api.js";
+import {mapMutations} from "vuex";
 
 export default {
     name: "backendLogin",
@@ -29,13 +30,23 @@ export default {
             tips: ""
         }
     },
+    created(){
+        let isLogin = localStorage.getItem("isLogin");
+        if(isLogin){
+            this.$router.push("/backend/posts");
+        }
+    },
     methods:{
+        ...mapMutations([
+            "SET_LOGIN"
+        ]),
         async submit(){
             const result = await api.backendLogin(this.user);
             console.log("%c [backendLogin]", "color: green", result);
             if(result.success){
                 this.tips = "登陆成功";
-                this.$router.push({name: "backend"});
+                this.SET_LOGIN(true);
+                this.$router.push({name: "backendPosts"});
             }
             else{
                 this.tips = result.message;
