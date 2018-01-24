@@ -73,7 +73,7 @@ const routes = [
 ]
 
 const vueRouter = new Router({
-    mode: "hash",
+    mode: "history",
     bash: __dirname,
     routes,
 })

@@ -35,5 +35,5 @@ app.use(history());
 app.use(serve(__dirname+ "/static/blog/dist/"));
 
 console.log("server is running on 3000");
-app.listen(3000);
+app.listen(80);
 
