@@ -20,7 +20,7 @@ const sessionConfig = {
 global.Database = new Database();
 
 app.use(session(sessionConfig,app));
-app.use(bodyparser());
+app.use(bodyparser({formLimit: '10mb', jsonLimit: '10mb'}));
 app.use(cors({
     origin: function (ctx) {
         return "*"; 
@@ -28,16 +28,12 @@ app.use(cors({
     credentials: true,
 }));
 
-router.get('/blog', async(ctx,next) => {
-    await next();
-    ctx.redirect('http://localhost/static');
-})
 routes(router);
 app.use(router.routes());
 app.use(history());
 
-// app.use(serve(__dirname+ "/static/blog/dist/"));
+app.use(serve("/home/git/static/blog/v1/"));
 
 console.log("server is running on 3000");
-app.listen(80);
+app.listen(3000);
 
