@@ -28,11 +28,15 @@ app.use(cors({
     credentials: true,
 }));
 
+router.get('/blog', async(ctx,next) => {
+    await next();
+    ctx.redirect('http://localhost/static');
+})
 routes(router);
 app.use(router.routes());
 app.use(history());
 
-app.use(serve(__dirname+ "/static/blog/dist/"));
+// app.use(serve(__dirname+ "/static/blog/dist/"));
 
 console.log("server is running on 3000");
 app.listen(80);
