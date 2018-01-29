@@ -1,6 +1,10 @@
 const Seq = require("sequelize");
 const config = require("./config.js");
 
+/**
+ * Database Base
+ */
+
 class Base{
     constructor(){
         this.isInit = false;
@@ -21,12 +25,17 @@ class Base{
             this._tables = [];
             this.definePosts();
             this.defineUsers();
+            this.defineDesign();
             this.isInit = true;
         }
         else{
             console.log("[database]".green, "has been inited");
         }
     }
+
+    /**
+     * create Posts table mapping
+     */
 
     definePosts(){
         let Posts = this.seq.define("posts", {
@@ -40,7 +49,7 @@ class Base{
             updateAt: Seq.BIGINT,
             content: Seq.TEXT,
             desc: Seq.STRING,
-            img: Seq.STRING
+            img: Seq.TEXT
         },{
             timestamps: false
         })
@@ -50,6 +59,10 @@ class Base{
         }
         this._tables.push(_table);
     }
+
+    /**
+     * create Users table mapping
+     */
 
     defineUsers(){
         let Users = this.seq.define("users", {
@@ -75,6 +88,32 @@ class Base{
         let _table = {
             name: "users",
             model: Users
+        }
+        this._tables.push(_table);
+    }
+
+    /**
+     * create Design table mapping
+     */
+
+    defineDesign(){
+        let Designs = this.seq.define("designs", {
+            id: {
+                type: Seq.STRING,
+                primaryKey: true
+            },
+            name: Seq.STRING,
+            author: Seq.STRING,
+            imgs: Seq.TEXT,
+            desc: Seq.TEXT,
+            createAt: Seq.BIGINT,
+            updateAt: Seq.BIGINT
+        },{
+            timestamps: false
+        })
+        let _table = {
+            name: "designs",
+            model: Designs
         }
         this._tables.push(_table);
     }

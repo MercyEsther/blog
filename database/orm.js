@@ -7,16 +7,28 @@ class Orm extends Base{
         super();
     }
 
+    /**
+     * findAll
+     * @param {string} table 
+     * @return {object} tables
+     */
+
     findAll(table){
         let _table = this.getTable(table);
         let result = _table.findAll().then(r => {
             return r;
         })
         .catch(e => {
-            throw new Error("[findAll error]".red, e)
+            console.log("[findAll error]".red, e)
         })
         return result;
     }
+
+    /**
+     * findByName
+     * @param {string} table 
+     * @param {string} name 
+     */
 
     findByName(table, name){
         let _table = this.getTable(table);
@@ -28,6 +40,12 @@ class Orm extends Base{
         })
         return result;
     }
+
+    /**
+     * findById
+     * @param {string} table 
+     * @param {string} id 
+     */
 
     findById(table, id){
         let _table = this.getTable(table);
@@ -48,12 +66,21 @@ class Orm extends Base{
                 await r.destroy();
             }
             else if(option == "update"){
-                r.title = data.title;
-                r.author = data.author;
-                r.content = data.content;
-                r.desc = data.desc;
-                r.updateAt = Date.now();
-                r.img = data.img;
+                if(table == "posts"){
+                    r.title = data.title;
+                    r.author = data.author;
+                    r.content = data.content;
+                    r.desc = data.desc;
+                    r.updateAt = Date.now();
+                    r.img = data.img;
+                }
+                else if(table == "designs"){
+                    r.name = data.name;
+                    r.author = data.author;
+                    r.desc = data.desc;
+                    r.updateAt = data.updateAt;
+                    r.imgs = data.imgs;
+                }
                 await r.save();
             }
             return true;
@@ -122,6 +149,29 @@ class Orm extends Base{
             return r;
         }).catch(e => {
             throw new Error("[insertPost error]".red);
+        })
+        return r;
+    }
+
+    /**
+     * insertDesign
+     * @param {object} data 
+     */
+
+    insertDesign(data){
+        let _table = this.getTable("designs");
+        let r = _table.create({
+            id: Date.now(),
+            name: data.name,
+            author: data.author,
+            desc: data.desc,
+            imgs: data.imgs,
+            createAt: Date.now(),
+            updateAt: Date.now()
+        }).then(r => {
+            return r;
+        }).catch(e => {
+            console.log("insertDesign error".red, e);
         })
         return r;
     }

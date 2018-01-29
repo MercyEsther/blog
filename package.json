@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.17.1",
     "bcrypt": "^1.0.3",
     "chai": "^4.1.2",
     "colors": "^1.1.2",
@@ -22,5 +23,8 @@
     "mocha": "^4.1.0",
     "mysql2": "^1.5.1",
     "sequelize": "^4.30.2"
+  },
+  "devDependencies": {
+    "ava": "^0.25.0"
   }
 }

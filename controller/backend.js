@@ -1,6 +1,11 @@
 const colors = require("colors");
 const bcrypt = require("bcrypt");
 
+/**
+ * signin
+ * 
+ * res: userinfo
+ */
 var signin = async(ctx, next) => {
     await next();
     const user = ctx.request.body;
@@ -48,6 +53,12 @@ var signin = async(ctx, next) => {
     ctx.body = JSON.stringify(data);
 }
 
+/**
+* signout
+* 
+* res: signout result 
+*/
+
 var signout = async(ctx, next) => {
     await next();
     let data = {};
@@ -62,6 +73,12 @@ var signout = async(ctx, next) => {
     console.log("[data]".green,ctx.session.user);
     ctx.body = data;
 }
+
+/**
+ * get All posts
+ * 
+ * res: posts
+ */
 
 var getPosts = async(ctx, next) => {
     await next();
@@ -85,6 +102,50 @@ var getPosts = async(ctx, next) => {
     ctx.body = data;
 }
 
+/**
+ * getDesigns
+ * 
+ * @param {*} ctx 
+ * @param {*} next 
+ */
+
+var getDesigns = async(ctx, next) => {
+    await next();
+    let data = {};
+    console.log("getDesigns".green);
+
+    let r = await Database.findAll("designs");
+    if(r){
+        let designStr = JSON.stringify(r);
+        designs = JSON.parse(designStr);
+        data ={
+            success: 1,
+            designs: designs
+        }
+    }
+    else{
+        data = {
+            error: 1,
+            message: "设计搜索失败"
+        }
+    }
+    ctx.body = data;
+}
+
+var getSomePosts = async(ctx, next) => {
+    await next();
+    var data = {};
+
+    ctx.body = data;
+}
+
+/**
+ * delete Post
+ * 
+ * req: post
+ * res: result
+ */
+
 var deletePost = async(ctx,next) => {
     await next();
     let id = ctx.href.split("?")[1].split("=")[1];
@@ -105,6 +166,40 @@ var deletePost = async(ctx,next) => {
     ctx.body = data;
 }
 
+/**
+ * deleteDesign
+ * 
+ * @param {*} ctx 
+ * @param {*} next 
+ */
+
+var deleteDesign = async(ctx, next) => {
+    await next();
+    let id = ctx.href.split("?")[1].split("=")[1];
+    console.log("[deleteDesign]".green, id);
+    let data = {};
+
+    const r = await Database.update("designs",{id: id},"delete")
+    if(r){
+        data = {
+            success: 1
+        }
+    }else{
+        data = {
+            error: 1,
+            message: "数据删除失败"
+        }
+    }
+    ctx.body = data;
+}
+
+/**
+ * add post
+ * 
+ * req: post
+ * res: result
+ */
+
 var addPost = async(ctx,next) => {
     await next();
     let data = {};
@@ -120,6 +215,13 @@ var addPost = async(ctx,next) => {
     }
     ctx.body = data;
 }
+
+/**
+ * update post
+ * 
+ * req: post
+ * res: result
+ */
 
 var updatePost = async(ctx,next) => {
     await next();
@@ -141,16 +243,69 @@ var updatePost = async(ctx,next) => {
     ctx.body = data;
 }
 
-function checkPassword(password, hash){
-    console.log("checkPassword".green, password + "--" + hash);
-    return bcrypt.compare(password, hash);
+/**
+ * updateDesign
+ * 
+ * @param {*} ctx 
+ * @param {*} next 
+ */
+
+var updateDesign = async(ctx, next) => {
+    await next();
+    let data = {};
+    let design = ctx.request.body;
+    console.log("[updateDesign success]".green);
+
+    let r = await Database.update("designs",design,"update");
+    if(r){
+        data = {success: 1};
+    }
+    else{
+        data = {
+            error: 1,
+            message: "更新设计失败"
+        }
+    }
+    ctx.body = data;
 }
+
+/**
+ * addDesign
+ * 
+ * @param {*} ctx 
+ * @param {*} next 
+ */
+
+var addDesign = async(ctx, next) => {
+    await next();
+    let data = {};
+    let r = await Database.insertDesign(data);
+    if(r){
+        data = {success: 1};
+    }
+    else{
+        data = {
+            error: 1,
+            message: "添加设计失败"
+        }
+    }
+    ctx.body = data;
+}
+
+/**
+ * export all backend controller function
+ */
 
 module.exports = {
     signin,
     signout,
     getPosts,
+    getSomePosts,
     deletePost,
     addPost,
-    updatePost
+    updatePost,
+    addDesign,
+    getDesigns,
+    deleteDesign,
+    updateDesign
 };

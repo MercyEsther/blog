@@ -37,3 +37,5 @@ app.use(serve("/home/git/static/blog/v1/"));
 console.log("server is running on 3000");
 app.listen(3000);
 
+module.exports = app;
+
